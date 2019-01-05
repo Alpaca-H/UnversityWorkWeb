@@ -1,0 +1,504 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+    <link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'css/font/iconfont.js' %}"></script>
+    <script src="{% static 'js/echarts.min.js' %}"></script>
+    {% for jsfile_name in script_list %}
+    <script src="{{ host }}/{{ jsfile_name }}.js"></script>
+    {% endfor %}
+</head>
+<style>
+    #ms_content {
+        margin-top: 20px;
+        font-size: 1em;
+    }
+    .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+        font-size: 26px
+    }
+    body{
+        font-size: 100%;
+    }
+</style>
+<body>
+   <div class="header_bg">
+        <div class="container">
+            <div class="row header">
+                <div class="logo navbar-left">
+                    <h1>Nba球星数据库</h1>
+                </div>
+                <div class="h_search navbar-right" style="margin-top: 20px">
+                   <button class="btn btn-default" ><a href="{% url 'news:newsDisplay' "hupu" %}">返回</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content" id="ms_content">
+        <div class="container">
+            <div class="row">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">筛选框</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li role="presentation" id="three"><a href="#">数据可视</a></li>
+                                <li role="presentation" id="four"><a href="#">详细数据</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle"  data-toggle="dropdown" role="button"
+                                        aria-haspopup="true" aria-expanded="false" id="nianfen">年份<span class="caret"></span></a>
+                                    <ul class="dropdown-menu years">
+                                        <li ><a href="#" id="2017" >2017-2018</a></li>
+                                        <li ><a href="#" id="2016">2016-2017</a></li>
+                                        <li ><a href="#" id="2015">2015-2016</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" id="saiji_sel" data-toggle="dropdown" role="button"
+                                        aria-haspopup="true" aria-expanded="false" id="sj">赛季<span class="caret"></span></a>
+                                    <ul class="dropdown-menu saiji">
+                                        <li ><a href="#" id="jq">季前赛</a></li>
+                                        <li ><a href="#" id="jh">季后赛</a></li>
+                                        <li ><a href="#" id="cg">常规赛</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="row" id="searchText">
+                <div class="col-md-5 input-group-sm" >
+                    <form action="/data/" method="post">
+                        {% csrf_token %}
+                        <ul class="nav nav-pills">
+                            <li role="presentation" ><input type="text" name="nianfen" id="nianfen_input" style="height:29.6px"  placeholder="1516/1718/1718"></li>
+                            <li role="presentation"  ><input type="text" name="saiji" id="saiji_input" style="height:29.6px" placeholder="季前赛/季后赛/常规赛"></li>
+                            <li role="presentation" ><input type="submit" class="btn-sm btn btn-default" value="查询" ></li>
+                        </ul>
+                    </form>
+
+                </div>
+                <div class="">
+                    <ul class="nav nav-pills">
+                        <li role="presentation" class="active" id="one"><a href="#" >场均</a></li>
+                        <li role="presentation" id="two"><a href="#">全部</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        <!--1718年-->
+         {% if tx1718JqCj %}
+            <table class="table table-hover"  id="table1">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1718JqCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1718JhCj %}
+            <table class="table table-hover"  id="table1">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1718JhCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1718CgCj %}
+            <table class="table table-hover"  id="table1">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1718CgCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% endif %}
+
+        {% if tx1718jqQb %}
+            <table class="table table-hover"  id="table2">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1718jqQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1718jhQb %}
+            <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1718jhQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1718CgQb %}
+            <table class="table table-hover"  id="table2">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for i in tx1718CgQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+
+        {% endif %}
+        <!--1617年-->
+         {% if tx1617JqCj %}
+            <table class="table table-hover"  id="table1">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617JqCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1617JhCj %}
+            <table class="table table-hover"  id="table1">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617JhCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1617CgCj %}
+            <table class="table table-hover"  id="table1">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617CgCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% endif %}
+
+        {% if tx1617jqQb %}
+            <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617jqQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1617jhQb %}
+            <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617jhQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% elif tx1617CgQb %}
+            <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1617CgQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+
+        {% endif %}
+
+
+        <!--1516年-->
+            {% if tx1516JqCj %}
+                <table class="table table-hover"  id="table1">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516JqCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            {% elif tx1516JhCj %}
+                <table class="table table-hover"  id="table1">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516JhCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            {% elif tx1516CgCj %}
+                <table class="table table-hover"  id="table1">
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516CgCj.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% endif %}
+            {% if tx1516jqQb %}
+                <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516jqQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            {% elif tx1516jhQb %}
+                <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516jhQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            {% elif tx1516CgQb %}
+                <table class="table table-hover"  id="table2">
+
+                    <thead>
+                        <tr><th>#</th><th>排名</th><th>球员</th><th>球队</th><th>得分</th><th>出手数</th><th>命中率</th><th>3分出手</th><th>3分命中</th><th>罚球次数</th><th>罚球命中率</th><th>篮板</th><th>前场篮板</th><th>后场篮板</th><th>助攻</th><th>抢断</th><th>盖帽</th><th>失误</th><th>犯规</th><th>场次</th><th>上场时间</th></tr>
+                    </thead>
+
+                    <tbody>
+                    {% for i in tx1516CgQb.object_list %}
+                        <tr><th>{{ forloop.counter }}</th><th>{{ i.paiming }}</th><th>{{ i.qiuyuan }}</th><th>{{ i.qiudui }}</th><th>{{ i.defen_selected }}</th><th>{{ i.chushou }}</th><th>{{ i.mingzhong }}</th><th>{{ i.chushou3 }}</th><th>{{ i.mingzhong3 }}</th><th>{{ i.faci }}</th><th>{{ i.falv }}</th><th>{{ i.lanban }}</th><th>{{ i.qlanban }}</th><th>{{ i.hlanban }}</th><th>{{ i.zhugong }}</th><th>{{ i.qiangduan }}</th><th>{{ i.gaimao }}</th><th>{{ i.shiwu }}</th><th>{{ i.fangui }}</th><th>{{ i.changci }}</th><th>{{ i.shangchang }}</th></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        {% endif %}
+
+        </div>
+    </div>
+
+      <div class="container" id="page">
+          <div class="row">
+               <div class="footer">
+            <div class="container">
+                <div class="row col-md-offset-5">
+                    <ul class="pagination pagination-sm">
+                        {% if tx1718CgCj.has_previous %}
+            <li class="long"><a href="?{{ tx1718CgCj.previous_page_number.querystring }}">上一页</a></li>
+            {% endif %}
+            {% for page in tx1718CgCj.pages %}
+            {% if page %}
+            {% ifequal page tx1718CgCj.number %}
+            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+            {% else %}
+            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+            {% endifequal %}
+            {% else %}
+            <li class="none"><a href="">...</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if tx1718CgCj.has_next %}
+            <li class="long"><a href="?{{ tx1718CgCj.next_page_number.querystring }}">下一页</a></li>
+            {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+          </div>
+      </div>
+
+
+
+    <div class="slown">
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-3 col-md-offset-2">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <img src="{{ v_left.imgurl }}" alt="...">
+                                <div class="caption">
+                                    <h3>{{ v_left.c_name }}({{ v_left.e_name }})</h3>
+                                    <p>球衣号码:{{ v_left.player_number | safe }}</p>
+                                    <p>位置:{{ v_left.weizhi | safe }}</p>
+                                    <p>身高:{{ v_left.shengao | safe }}</p>
+                                    <p>体重:{{ v_left.tizhong  | safe}}</p>
+                                    <p>合同:{{ v_left.hetong2  | safe}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h1>Pk</h1>
+                        <form action="/match/" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="随机匹配" name="match_player" id="match_player">
+                        </form>
+                    </div>
+                    <div class="col-md-3 col-md-offset-1">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <img src="{{ v_right.imgurl }}" alt="...">
+                                <div class="caption">
+                                    <h3>{{ v_right.c_name }}({{ v_right.e_name }})</h3>
+                                    <p>球衣号码:{{ v_right.player_number | safe }}</p>
+                                    <p>位置:{{ v_right.weizhi | safe }}</p>
+                                    <p>身高:{{ v_right.shengao | safe }}</p>
+                                    <p>体重:{{ v_right.tizhong  | safe}}</p>
+                                    <p>合同:{{ v_right.hetong2  | safe}}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="iframe_container">
+        <iframe src="http://127.0.0.1:8000/chart/" frameborder="0" style="margin-left: 116px" width="1000px" height="400px"
+            scrolling="no"></iframe>
+    </div>
+
+    <script text="text/javascript">
+        $(document).ready(function () {
+            $("table#table2").hide("fast");
+            $(".slown").hide("fast");
+            $("#iframe_container").hide("fast");
+            $("ul.nav li#one").click(function () {
+                $("li").removeClass();
+                $(this).addClass("active");
+                $("table#table2").fadeOut("fast"); //消失
+                $("table#table1").fadeIn("fast"); //出现
+                $(".slown").fadeOut("fast");
+                $("#iframe_container").fadeOut("fast");
+            });
+            $("ul.nav li#two").click(function () {
+                $("li").removeClass();
+                $(this).addClass("active");
+                $("table#table1").fadeOut("fast");  //消失
+                $("table#table2").fadeIn("fast");   //出现
+                $(".slown").fadeOut("fast");
+                $("#iframe_container").fadeOut("fast");
+            });
+            $("ul.nav li#three").click(function () {
+                $("li").removeClass();
+                $(this).addClass("active");
+                $(".slown").fadeIn("fast");
+                $("#iframe_container").fadeIn("fast");
+                $("table#table2").fadeOut("fast");
+                $("table#table1").fadeOut("fast");
+                $("#one").fadeOut("fast");
+                $("#two").fadeOut("fast");
+                $('#searchText').hide("fast");
+                $('#page').hide("fast");
+                $('#sole').fadeOut("fast")
+            });
+            $("ul.nav li#four").click(function () {
+                $("li").removeClass();
+                $(this).addClass("active");
+                $(".slown").fadeOut("fast");
+                $("#iframe_container").fadeOut("fast");
+                $("#one").fadeIn("fast");
+                $("#two").fadeIn("fast");
+                $("table#table1").fadeIn("fast");
+                 $('#searchText').show("fast");
+                 $('#one').addClass("active");
+            });
+
+            $("#2017").click(function () {
+                $("#nianfen_input").val("1718");
+            });
+             $("#2016").click(function () {
+                $("#nianfen_input").val("1617");
+            });
+              $("#2015").click(function () {
+                $("#nianfen_input").val("1516");
+            });
+
+              $("#jq").click(function () {
+                $("#saiji_input").val("季前赛");
+            });
+             $("#jh").click(function () {
+                $("#saiji_input").val("季后赛");
+            });
+              $("#cg").click(function () {
+                $("#saiji_input").val("常规赛");
+            });
+
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="lt-LT">
+<head>
+	<title>PeachFolio - Portfolio Template</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link href="{% static 'css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+	<link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/news_reset.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/news_style.css' %}" />
+	<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" media="all" />
+	<link href="{% static 'css/head_style.css' %}" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+
+<body>
+	<div class="header_bg">
+		<div class="container">
+			<div class="row header">
+				<div class="logo navbar-left">
+					<h1><a href="#" style="font-size: 2em;">新闻评论页</a></h1>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row h_menu">
+			<nav class="navbar navbar-default navbar-left" role="navigation">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="{% url 'news:newsList' %}">主页</a></li>
+						<li><a href="{% url 'news:newsDisplay' 'hupu' %}">新闻</a></li>
+						<li><a href="{% url 'DataDisplay' %}">数据中心</a></li>
+						<li><a href="{% url 'saicheng' %}">赛程安排</a></li>
+						<li><a href="{% url 'news:top100' %}">视频Top100</a></li>
+						<li><a href="{% url 'zhanshi_nologin' %}">关于</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+	<div id="content">
+		<div class="blog-content">
+			<div class="blog-post blog-post-inner">
+				<div class="post-right">
+					<a href="#" class="featured">
+						<img src="{{ news_list.img_url }}" alt="" title="" />
+					</a>
+
+					<h2>{{ news_list.title }}</h2>
+
+					<p>
+						{{ news_list.context }}
+					</p>
+					<p>
+
+						{{ news_list.context }}
+					</p>
+					<p>
+						{{ news_list.context }}
+					</p>
+
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+            <!--评论部分  Post-comments -->
+
+
+			<div class="post-comments">
+				<h2>评论{{ comments.count }}</h2>
+                <h2>{{ NoneComments }}</h2>
+				{% for i in comments %}
+                    {% ifequal i.level 1 %}
+                        <div class="comment">
+					        <img class="avatar" src="{% static 'images/news/comment_avatar.jpg' %}" alt="" title="" />
+					        <div class="comment-data">
+						    <h3>{{ i.comment|slice:":3" }}</h3>
+						    <div class="comment-meta">
+							    <span>{{ i.time|slice:"19" }}</span> <i><input type="button" value="回复" class="reply"></i>
+						    </div>
+						    <p>
+							    {{ i.comment|slice:"4:" }}
+						    </p>
+					    </div>
+					        <div class="clear"></div>
+
+                    {% endifequal %}
+                    {% ifequal i.level 2 %}
+                        </div>
+                        <div class="comment comment-inner">
+					    <a href="#">
+						    <img class="avatar" src="{% static 'images/news/comment_avatar.jpg' %}" alt="" title="" />
+					    </a>
+					<div class="comment-data">
+						<h3>{{ i.comment|slice:":3" }}</h3>
+						<div class="comment-meta">
+							    <span>{{ i.time|slice:"19" }}</span> <i><input type="button" value="回复" class="reply"></i>
+                        </div>
+						<p>
+							    {{ i.comment|slice:"4:" }}
+                        </p>
+					</div>
+					<div class="clear"></div>
+				</div><!-- .comment end -->
+
+                    {% endifequal %}
+                {% endfor %}
+
+
+
+			<div class="comment-form">
+
+
+				<form class="form" >
+
+                    {%  if request.user.is_authenticated %}
+                        <h2>开始评论</h2>
+                         <label><h2>用户名:</h2></label>
+					<input class="text" type="text" value="{{ request.user.nike_name }}"  readonly="readonly"  id="nickName"/>
+                        <label><h2>评论内容</h2></label>
+					<textarea rows="4" cols="3" name="comments_text" id="ttext"></textarea>
+					<div class="clear"></div>
+					<input class="btn btn-default" type="button" id="commit" value="评论" />
+                    <input class="btn btn-default" type="button" id="forReply" value="回复" />
+                    {% else %}
+                    <p><h2>您还未登录,请点击登陆成功后进行回复</h2></p>
+                    {% endif %}
+
+                    <!--两个input试试看-->
+				</form>
+			</div><!-- .comment-form end -->
+
+		</div><!-- .blog-content end -->
+
+
+		<div class="sidebar">
+{#			<div class="widget">#}
+{#				<h2>Sidebar text widget</h2>#}
+{##}
+{#				<p>#}
+{#					Sed ut <b>perspiciatis unde omnis</b> iste natus error#}
+{#					sit voluptatem accusantium doloremque#}
+{#					laudantium, totam rem aperiam, eaque ipsa quae#}
+{#					ab illo inventore veritatis et quasi architecto#}
+{#					beatae vitae dicta sunt#}
+{#				</p>#}
+{##}
+{#				<p>#}
+{#					Explicabo. Nemo enim ipsam voluptatem quia#}
+{#					voluptas sit aspernatur aut odit aut fugit, sed quia#}
+{#					consequuntur magni dolores eos qui ratione#}
+{#					voluptatem sequi nesciunt. Neque porro#}
+{#					quisquam est, qui dolore#}
+{#				</p>#}
+{#			</div>#}
+{##}
+{#			<div class="widget">#}
+{#				<h2>Categories</h2>#}
+{##}
+{#				<ul class="cats">#}
+{#					<li><a href="#">WEB DESIGN Tutorials</a></li>#}
+{#					<li><a href="#">Web development tutorials</a></li>#}
+{#					<li><a href="#">Graphic design resources</a></li>#}
+{#					<li><a href="#">Our themes realeses</a></li>#}
+{#					<li><a href="#">Recent sapphire news</a></li>#}
+{#					<li><a href="#"></a> </a> </li>#}
+{#				</ul>#}
+{#			</div>#}
+{#			<div class="widget">#}
+{#				<h2>Recent photo's gallery</h2>#}
+{##}
+{#				<ul class="photos">#}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li class="last"><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{##}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li class="last"><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{##}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#					<li class="last"><a href="#"><img src="img/gallery_image_1.jpg" alt="" /></a></li>#}
+{#				</ul>#}
+{#			</div>#}
+		</div>
+		<div class="clear"></div>
+	</div>
+    </div>
+<script src="{% static 'js/jquery.js' %}" ></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#forReply").hide("fast");
+        });
+
+    </script>
+    <!--评论 -->
+    <script type="text/javascript">
+        $('#commit').click(function () {
+            var nickName = $('#nickName').val();
+            var ttext = $('#ttext').val();
+            var ss = window.location.href;   //获取当前url
+            var id  = ss.split('/')[4]; //使用split截取内容
+                $.ajax({
+                url:"{% url 'comments' %}",
+                type:'POST',
+                data:{
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    nickName:nickName,
+                    ttext:ttext,
+                    id:id,
+                    type:"ccet",
+                },
+                content_type:"application/json",
+                success:function(data) {
+                    if (data == 1){
+                        alert("评论成功"),
+                        $('#ttext').val(""),
+                            window.location.reload()
+                    }
+                    else {
+                        alert("请重新评论！")
+                    }
+                }
+            })
+        })
+    </script>
+
+    <!--页面回复-->
+    <script type="text/javascript" >
+        $('.reply').click(function () {
+            {#$("#commit").val("回复");#}
+            {#$('#commit').attr('id','new_reply');#}  //单个input按钮的时候
+            //单个按钮功能无法实现  使用两个按钮，根据不同的功能展现不同的按钮就好了
+            var HeadName  = $(this).parent().parent().parent().children("h3").html();
+            $('#nickName').val(HeadName);
+            $('#forReply').fadeIn();
+            $('#commit').hide();
+        })
+    </script>
+
+
+  <!--回复-->
+    <script type="text/javascript">
+        $("#forReply").click(function () {
+            var nickName = $('#nickName').val();
+            var ttext = $('#ttext').val();
+            var ss = window.location.href;  //获取当前url
+            var id  = ss.split('/')[4]; //使用split截取内容
+            $.ajax({
+                url:"{% url 'comments' %}",
+                type:'POST',
+                    data:{
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        nickName:nickName,
+                        ttext:ttext,
+                        id:id,
+                        type:"reply"
+                    },
+                content_type:"application/json",
+                success:function(data) {
+                    if (data == 1){
+                        alert("回复成功"),
+                            $('#ttext').val(""),
+                        window.location.reload()
+                    }
+                    else {
+                        alert("回复失败,请重新回复！")
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

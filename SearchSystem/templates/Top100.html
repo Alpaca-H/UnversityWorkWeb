@@ -1,0 +1,105 @@
+{% load staticfiles %}
+{% load filter %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+    <link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <title>Document</title>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'css/font/iconfont.js' %}"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+</head>
+<style>
+    #ms_content {
+        margin-top: 20px;
+        font-size: 1em;
+
+    }
+
+
+    .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+        font-size: 26px
+    }
+
+</style>
+
+<body>
+    <div class="header_bg">
+        <div class="container">
+            <div class="row header">
+                <div class="logo navbar-left">
+                    <h1>Nba球星数据库</h1>
+                </div>
+                <div class="h_search navbar-right" style="margin-top: 20px">
+                   <button class="btn btn-default" ><a href="{% url 'news:newsDisplay' "hupu" %}">返回</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content" id="ms_content">
+        <div class="container">
+            <div>
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">筛选框</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="video_display">
+        <div class="container">
+                <div class="flex-row" >
+                {% for toplist in  topLists.object_list %}
+                    <div class="col-md-3">
+                        <a href="{{ toplist.true_url }}" target="_blank"><img src="http://{{ toplist.video_img }}?imageView2/2/w/200/h/112/q/100|imageslim" alt=""></a>
+                        <p>{{  toplist.video_title|slice:"10:25" }}<br>来自于<a href="https://v.qq.com/">腾讯视频</a></p>
+                    </div>
+                 {% endfor %}
+                </div>
+        </div>
+    </div>
+	<div class="footer">
+		<div class="container">
+			<div class="row col-md-offset-2">
+				<ul class="pagination pagination-lg">
+					{% if topLists.has_previous %}
+					<li class="long"><a href="?{{ topLists.previous_page_number.querystring }}">上一页</a></li>
+					{% endif %}
+					{% for page in topLists.pages %}
+					{% if page %}
+					{% ifequal page topLists.number %}
+					<li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+					{% else %}
+					<li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+					{% endifequal %}
+					{% else %}
+					<li class="none"><a href="">...</a></li>
+					{% endif %}
+					{% endfor %}
+					{% if news_dp.has_next %}
+					<li class="long"><a href="?{{ topLists.next_page_number.querystring }}">下一页</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

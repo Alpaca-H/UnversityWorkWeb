@@ -1,0 +1,287 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alpaca | setting</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel='stylesheet' type='text/css' />
+    <link href="{% static 'css/bootstrap.css' %}" rel='stylesheet' type='text/css' />
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static "js/bootstrap.js" %}"></script>
+</head>
+
+<style>
+    li {
+
+        list-style: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .content {
+        margin-top: -20px
+    }
+
+    .content .content-left .panel {
+        width: 180px;
+        height: 616.8px;
+    }
+
+    .content-left {
+
+        width: 200px;
+        height: 616.8px;
+        float: left;
+        /* border: 1px solid red; */
+        margin-top: 20px;
+
+    }
+
+    .content-left .container .active {
+        color: red;
+        background-color: white;
+        opacity: 0.7;
+        font-size: 20px;
+    }
+
+    .round_icon {
+        width: 118px;
+        height: 90px;
+        display: flex;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+
+    .navbar-default {
+
+        background-color: white;
+    }
+
+
+    .content-right {
+        width: 1020px;
+        height: 622px;
+        background-color: white;
+        margin-left: 450px;
+        margin-top: -616px;
+        float: left;
+    }
+    .form-setting li{
+        margin-top: 20px;
+    }
+    .quanxian{
+        position: absolute;
+        left: 1283px;
+        top: 99px;
+    }
+
+    .content-right{
+        border: solid 1px #dddddd;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+               <button class="btn btn-default col-md-offset-12 " style="margin-top: 10px" ><a href="{% url 'news:newsDisplay' "hupu" %}">返回</a></button>
+            </div>
+        </nav>
+    </div>
+
+
+    <!--没有记录-->
+    <div class="content" >
+        <div class="content-left">
+            <div class="container" style="margin-left:180px">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><div align="center"><img src="/image/{{ request.user.head_image }}" class="round_icon" alt=""></div></li>
+                            {% if request.user.is_authenticated %}
+                                <li style="text-align: center">{{ request.user.nike_name }}</li>
+                                {% else %}
+                                <li style="text-align: center">请完善个人信息</li>
+                            {% endif %}
+                            <li align="center" class="isMember">您还不是会员哦!</li>
+                            <li style="float: left;margin-left: 20px" ><button class="btn btn-default btn-sm"   data-toggle="modal" data-target="#myModal">开通</button></li>
+                            <li style="float:left;margin-left: 20px" ><button class="btn btn-default btn-sm"  data-toggle="modal" data-target="#xufeiModal">续费</button></li>
+                        </ul>
+                    </div>
+
+                    <!-- List group -->
+                    <ul class="list-group">
+                        <li class="list-group-item active"  id="setting">个人设置</li>
+                        <li class="list-group-item" id="msg">系统消息</li>
+                        <li class="list-group-item" id="match">赛事提醒</li>
+                        <li class="list-group-item" id="about">相关介绍</li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <div class="content-right" id="group1">
+               <div  style="margin-top: 10%" >
+                <ul style="margin-left: 25%" class="form-setting">
+
+                    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <li ><span>账号: </span><input type="text" readonly="readonly" value="{{ request.user }}" name="zhanghao"></li>
+                        <li ><span>姓氏: </span><input type="text" name="xingshi"></li>
+                        <li><span>名字: </span><input type="text"  name="mingzi"></li>
+                        <li ><span>昵称: </span><input type="text" name="nicheng"></li>
+                        <li ><span>上传头像: </span><input type="file" value="修改图像" name="touxiang"></li>
+                        <li><input type="submit" class="btn btn-default" value="确认修改"></li>
+                    </form>
+                </ul>
+                   <div class="quanxian">
+                 {% if request.user.is_staff %}
+                        <li><span>您当前的用户权限为: <h3>管理员</h3></span></li>
+                        {% else %}
+                        <li><span>您当前的用户权限为:<h3>普通用户</h3></span></li>
+                 {% endif %}
+            </div>
+            </div>
+        </div>
+         <div class="content-right" id="group2">
+             <li class="list-group-item">欢迎您在我们网站上创建了一个用户,用户的名字为:xxx</li>
+             <li class="list-group-item">欢迎您充值金额并成为了我们的会员用户</li>
+             <li class="list-group-item">圣诞节快到了，小站在这里祝你圣诞快乐</li>
+             <li class="list-group-item">圣诞快乐</li>
+        </div>
+
+        <div class="content-right" id="group3">
+            <ul class="list-group">
+                <li class="list-group-item" id="msg">最近的赛事有...</li>
+                <li class="list-group-item" id="match">赛事提醒</li>
+             </ul>
+        </div>
+
+
+        <div class="content-right" id="group4" >
+            <p> 本来我想写个小程序，管理一下资料。觉得现在BS更有前途，我就去看了看目前最潮的</p>
+            <p> 1）SpringBoot，嗯顺便把MyBatis也看了。  差不多看完了，摩拳擦掌准备开干。嗯？前端还需要自己写？没有好用的框架？ 到处搜索一番，大家都说Vue好，还是中国人自己的框架，就它了。</p>
+            <p> 2）打开Vue文档第一句话，你需要HTML、CSS和JavaScript的知识。 好吧，HTML和CSS还略懂，还是先看看JavaScript。</p>
+            <p> 3）打开JavaScript文档第一段，你需要先知道EMCAScript， 你需要了解EMCAScript5/6，否则你就是一个废柴JavaScript程序 员，废柴就废柴，我先把JavaScript语法撸了一遍，就是螺蛳壳里 做道场，浏览器里写代码啊。</p>
+            <p> 4）撸完回头再来看Vue，你需要先安装Vue-cli，这个东东 它还依赖npm，npm是nodejs的。好吧先装nodejs，至于nod ejs本身是干什么的我都懒得看。npm看了看就是前端界的maven 和Gradle啊。由于科学上网的原因，npm装了还要装taobao的cnpm， 要不然一大堆坑等着你踩。</p>
+            <p> 5）npm装好了，开始看vue教程，vue官网是真不错，基础教程一天就看完了。看完仍是一脸懵逼。用vue-cli创建了一个程序架子，又下载了一个传说中的神器WebStorm，把程序架子打开一看，叹了一口气。</p>
+            <p> 6)什么index.html，main.js，App.vue，什么router，component，statistics一个个慢慢看吧。捣鼓了半天npm install，npm dev，程序总算运行起来了。各种代码语法似乎都认得，放到一起怎么觉得就搞不懂呢</p>
+            <p> 7）页面怎么跳转的？还要看vue-router，嗯，官网上还有教程。</p>
+            <p> 8）页面太丑了，你还需要饿了么的ElementUI，这不是送外卖的公司么？还能写前端控件？正好饿了，我打开“百度外卖”点了包子，吃了包子继续看ElementUI。懒得看了，直接import进来，死马就当活马医。</p>
+            <p> 9）页面上放了几个控 件，怎么和后端的SpringBoot联系上呢？似乎还要用什么库。。。至此我已经看了两周的文档了，我的程序还没开始动笔。。。这还是我比较熟悉Java、SQL等后台技术的情况下开始的学习</p>
+        </div>
+
+
+
+        <!--开通弹窗-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					支付宝付款中..
+				</h4>
+			</div>
+			<div class="modal-body">
+                <img src="http://pksl7973u.bkt.clouddn.com/Web/static/pay.png" width="200px" height="200px" alt="">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消付款
+				</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" id="tt">
+					付款成功
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+    </div>
+
+
+
+    <!--续费弹窗-->
+        <div class="modal fade" id="xufeiModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					续费中...
+				</h4>
+			</div>
+			<div class="modal-body">
+                <img src="http://pksl7973u.bkt.clouddn.com/Web/static/pay.png" width="200px" height="200px" alt="">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消付款
+				</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" id="xufeitt">
+					付款成功
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#group2').hide();
+            $('#group3').hide();
+            $('#group4').hide();
+            $(".list-group li").click(function () {
+                $(".list-group li").removeClass('active');
+                $(this).addClass('active');
+            });
+
+
+            $('#msg').click(function () {
+                $('#group1').hide("fast");  //fadein显示
+                $('#group2').show();
+                $('#group3').hide();
+                $('#group4').hide();
+
+            });
+            $('#setting').click(function () {
+                $('#group1').show("fast");  //fadein显示
+                $('#group2').hide();
+                $('#group3').hide();
+                $('#group4').hide();
+
+            });
+            $('#match').click(function () {
+                $('#group1').hide("fast");  //fadein显示
+                $('#group2').hide();
+                $('#group3').show();
+                $('#group4').hide();
+
+            });
+            $('#about').click(function () {
+                $('#group1').hide("fast");  //fadein显示
+                $('#group2').hide();
+                $('#group3').hide();
+                $('#group4').show();
+            });
+        });
+        $('#tt').click(function () {
+            $('.isMember').html('欢迎您,尊贵的会员用户')
+        });
+        $('#xufeitt').click(function () {
+            $('.isMember').html("欢迎您,尊贵的会员用户")
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+{% load filter %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/js/jquery.js">
+    <link rel="stylesheet" href="../static/css/head_style.css">
+</head>
+<style>
+     li{
+            list-style: none;
+        }
+</style>
+
+<body>
+    <div class="header_bg">
+        <div class="container">
+            <div class="row header">
+                <div class="logo navbar-left">
+                    <h1>Nba球星新闻</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    	<div class="container">
+		<div class="row h_menu">
+			<nav class="navbar navbar-default navbar-left" role="navigation">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="{% url 'news:newsList' %}">主页</a></li>
+						<li><a href="{% url 'news:newsDisplay' 'hupu' %}">新闻</a></li>
+						<li><a href="{% url 'DataDisplay' %}">数据中心</a></li>
+						<li><a href="{% url 'saicheng' %}">赛程安排</a></li>
+						<li><a href="/404Response/">全站搜索</a></li>
+						<li><a href="{% url 'news:top100' %}">视频Top100</a></li>
+						<li><a href="{% url 'zhanshi_nologin' %}">关于</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+
+    <div class="center_box">
+        <div class="container">
+            <div class="row">
+                <h3>虎扑新闻<a href="{% url 'news:newsDisplay' "hupu" %}" class="text-info small">更多>></a></h3>
+                <hr>
+                <div class="col-md-4">
+                    <ul>
+                        {% for hupu_new in hupu_news_20 %}
+                           {% if "{{hupu_new.title|length|mod}}"%}
+                                <li><a href="{% url 'news:newsAll' hupu_new.id %}">{{ hupu_new.title|slice:":20"|add:"..." }}    |     {{ hupu_new.fabu_time | slice:"11:" }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        {% for hupu_new in hupu_news_10 %}
+                           {% if "{{hupu_new.title|length|mod}}"%}
+                                <li><a href="{% url 'news:newsAll' hupu_new.id %}">{{ hupu_new.title|slice:":20"|add:"..." }}    |     {{ hupu_new.fabu_time | slice:"11:" }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                     <ul>
+                       {% for hupu_new in hupu_news_30 %}
+                           {% if "{{hupu_new.title|length|mod}}"%}
+                                <li><a href="{% url 'news:newsAll' hupu_new.id %}">{{ hupu_new.title|slice:":20"|add:"..." }}    |     {{ hupu_new.fabu_time | slice:"11:" }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+         <div class="row">
+                 <h3>直播吧新闻</h3>
+                <hr>
+                <div class="col-md-4">
+                    <ul>
+                        {% for zbb_new in zbb_news_list_10 %}
+                           {% if "{{zbb_new.title|length|mod}}"%}
+                                <li><a href="{{ zbb_new.detail_url }}">{{ zbb_new.title|slice:":20"|add:"..." }}    |     {{ zbb_new.title_time}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        {% for zbb_new in zbb_news_list_20 %}
+                            {% if "{{zbb_new.title|length|mod}}"%}
+                                <li><a href="{{ zbb_new.detail_url }}">{{ zbb_new.title|slice:":20"|add:"..." }}    |     {{ zbb_new.title_time }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                     <ul>
+                       {% for zbb_new in zbb_news_list_30 %}
+                           {% if "{{zbb_new.title|length|mod}}"%}
+                                <li><a href="{{ zbb_new.detail_url }}">{{ zbb_new.title|slice:":20"|add:"..." }}    |     {{ zbb_new.title_time}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+         <div class="row">
+                  <h3>新浪新闻</h3>
+                <hr>
+                <div class="col-md-4">
+                    <ul>
+                        {% for xl_new in xl_news_list_10 %}
+                           {% if "{{xl_new.title|length|mod}}"%}
+                                <li><a href="{{ xl_new.detail_url }}">{{ xl_new.title|slice:":20"|add:"..." }}    |     {{ xl_new.title_time|slice:"5:"}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        {% for xl_new in xl_news_list_20 %}
+                            {% if "{{xl_new.title|length|mod}}"%}
+                                <li><a href="{{ xl_new.detail_url }}">{{ xl_new.title|slice:":20"|add:"..." }}    |     {{ xl_new.title_time|slice:"5:"  }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                     <ul>
+                       {% for xl_new in xl_news_list_30 %}
+                           {% if "{{xl_new.title|length|mod}}"%}
+                                <li><a href="{{ xl_new.detail_url }}">{{ xl_new.title|slice:":20"|add:"..." }}    |     {{ xl_new.title_time|slice:"5:"}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

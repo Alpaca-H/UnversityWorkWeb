@@ -1,0 +1,75 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link href="{% static 'css/zhuce_style.css' %}" rel='stylesheet' type='text/css' />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="{% static 'js/jquery.js' %}"></script>
+
+	<!--webfonts-->
+	<!--//webfonts-->
+</head>
+
+<body style="background-image: url('http://pjrjx4uuu.bkt.clouddn.com/500px286523713.jpg?imageView2/5/w/1920/h/1000/q/75|imageslim')">
+	<div class="main">
+		<div class="header ">
+			<h1>创建一个免费的账号</h1>
+		</div>
+		<p>你知道洛杉矶凌晨四点钟是什么样子吗？
+			满天星星，寥落的灯光，行人很少。</p>
+		<div>
+			<form style="margin-left:20px" method="post">
+				{% csrf_token %}
+				<ul class="left-form">
+					<h2>新的账号</h2>
+					<li>
+						<input type="text" placeholder="账号/手机号" id="nick_name" name="username" />
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="text" placeholder="邮箱" name="email" id="email"  />
+						<div class="clear"> </div>
+					</li>
+					<li>
+						<input type="password" placeholder="密码" name="password" />
+						<div class="clear"> </div>
+					</li>
+					<li>
+						{{ register_form.captcha }}
+						<div class="clear"> </div>
+					</li>
+
+
+					{% for key,errors in register_form.errors.items %}
+                        {{ errors }}
+					{% endfor %}
+					<input type="submit" value="确认创建">
+					<div class="clear"> </div>
+				</ul>
+				<div style="float:right;margin-top: 38px;margin-right: 132px">
+                    <p>欢迎注册该网站</p>
+                    <p>请在左边输入您的信息，并点击创建用户</p>
+                    <p>系统会给您发送一封邮件用来注册</p>
+                    <p>对于QQ邮箱，邮件可能存在于垃圾箱中...</p>
+                    <p>账号需要6位及以上，建议您填写手机号</p>
+                </div>
+				<div class="clear"> </div>
+
+			</form>
+		</div>
+	</div>
+	<script>
+		$('.captcha').click(function () {
+			$.getJSON("/captcha/refresh/", function (result) {
+				$('.captcha').attr('src', result['image_url']);
+				$('#id_captcha_0').val(result['key'])
+			});
+		});
+	</script>
+</body>
+
+</html>
+
+
